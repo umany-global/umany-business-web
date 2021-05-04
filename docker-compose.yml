@@ -1,0 +1,17 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+
+services:
+  umany:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: admin_umany
+    container_name: umany
+   # env_file:
+   #   - ./.envs/.prod
+    ports:
+      - "8005:80"

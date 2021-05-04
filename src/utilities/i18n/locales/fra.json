@@ -1,0 +1,14 @@
+{
+  "translation": {
+    "welcome_to_react": "Bienvenue à React et react-i18next",
+    "login.email": "E-mail",
+    "login.password": "Mot de passe",
+    "login.sign_in": "Connexion",
+    "login.forgot": "Vous avez oublié votre mot de passe?",
+    "login.have_account": "Vous n'avez pas de compte ? Inscrivez-vous.",
+    "login.remember": "Retenir le mot de passe",
+    "auth/invalid-email": "L'adresse électronique est mal formatée",
+    "auth/user-not-found": "Le courrier électronique n'existe pas",
+    "auth/wrong-password": "Le mot de passe fourni est incorrect"
+  }
+}

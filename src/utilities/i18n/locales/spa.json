@@ -1,0 +1,14 @@
+{
+  "translation": {
+    "welcome_to_react": "Bienvenue à React et react-i18next",
+    "login.phone": "Telefono",
+    "login.password": "Contraseña",
+    "login.sign_in": "Iniciar Sesion",
+    "login.forgot": "Olvidaste tu contraseña?",
+    "login.have_account": "¿No tienes una cuenta? Regístrate.",
+    "login.remember": "Recordar Contraseña",
+    "auth/invalid-email": "La dirección de correo electrónico está mal formateada",
+    "auth/user-not-found": "Este email no existe",
+    "auth/wrong-password": "La contraseña suministrada es incorrecta"
+  }
+}
