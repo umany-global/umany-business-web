@@ -173,9 +173,23 @@ const Dashboard = ({ children, dispatch }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap>
-            Umany empresas
-          </Typography>
+          <Grid container justify="space-between" style={{ margin: "0 20px" }}>
+            <Typography component="h1" variant="h6" color="inherit" noWrap>
+              Umany empresas
+            </Typography>
+            <IconButton
+              onClick={handleLogout}
+              aria-label="show 17 new notifications"
+              color="inherit"
+            >
+              {/* <Typography style={{ paddingRight: 10 }} variant="h6" gutterBottom>
+              Sign Out
+            </Typography> */}
+              <Tooltip title="Logout" aria-label="add">
+                <ExitToAppIcon />
+              </Tooltip>
+            </IconButton>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -212,7 +226,7 @@ const Dashboard = ({ children, dispatch }) => {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Paper>{children}</Paper>
+              {children}
             </Grid>
           </Grid>
         </Container>

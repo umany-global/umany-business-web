@@ -2,7 +2,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
+import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 
 // ACTIONS CREATORS
@@ -21,37 +21,26 @@ import { Components } from "umanyuikit";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 const HomeView = (props) => {
-  const {} = props;
+  // const {} = props;
+  const history = useHistory();
   const classes = useStyles();
   const [list, setList] = React.useState([
     { amount: 10, product: "Chupeta", discount: "10%" },
     { amount: 7, product: "Canela", discount: "14%" },
     { amount: 600, product: "Maya", discount: "15%" },
   ]);
-  const [target, setTarget] = React.useState({
-    amount: 600,
-    product: "Maya",
-    discount: "15%",
-  });
 
-  const { UmanyList, PromoBox } = Components;
-  console.log("UmanyList", UmanyList);
-  console.log("PromoBox", PromoBox);
+  const { UmanyList } = Components;
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} className={classes.tabContent}>
-        <UmanyList items={list} />
+        <UmanyList
+          items={list}
+          onInput={() => {
+            history.push("/product");
+          }}
+        />
       </Grid>
-      {/* <Grid container justify="center">
-        <Grid item md={4}>
-          <PromoBox
-            item={target}
-            confirmation={(item) => {
-              console.log(item);
-            }}
-          />
-        </Grid>
-      </Grid> */}
     </Grid>
   );
 };

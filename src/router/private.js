@@ -12,7 +12,8 @@ import PrivateLayout from "@containers/layouts/private.layout";
 
 // Views
 
-import Home from "@containers/views/home";
+import ProductList from "@containers/views/product/list.view";
+import ProductBox from "@containers/views/product/box.view";
 
 /* eslint import/no-anonymous-default-export: [2, {"allowArrowFunction": true}] */
 export default () => {
@@ -20,7 +21,8 @@ export default () => {
     <Router>
       <PrivateLayout>
         <Switch>
-          <Route path="/" exact component={Home} />
+          <Route path="/" exact component={ProductList} />
+          <Route path="/:id" exact component={ProductBox} />
           <Redirect to="/" />
         </Switch>
       </PrivateLayout>

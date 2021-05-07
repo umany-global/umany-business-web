@@ -9,8 +9,9 @@ let theme = createMuiTheme({
       },
     },
     MuiAppBar: {
-      colorPrimary: {
-        backgroundColor: "#61ccdb",
+      root: {
+        color: "#ffff !important",
+        backgroundColor: "#61ccdb !important",
       },
     },
     MuiInputLabel: {

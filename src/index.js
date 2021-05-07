@@ -12,7 +12,6 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import { FirebaseAuthProvider } from "@react-firebase/auth";
 
-// THEMES
 import theme from "@utilities/theme";
 
 // STORE
