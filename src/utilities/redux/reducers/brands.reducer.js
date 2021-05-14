@@ -1,21 +1,28 @@
 import BrandState from "@utilities/redux/states/brand.state";
 import {
-  VALIDATE_CHECK_LIST,
-  GET_BRAND_LIST,
+  GET_BRAND_TRANSACTION,
+  GET_BRAND_ORDERS,
+  GET_BRAND,
 } from "@/utilities/redux/actions/constants";
 
 export default function brandReducer(state = BrandState, action) {
   switch (action.type) {
-    case VALIDATE_CHECK_LIST: {
+    case GET_BRAND_TRANSACTION: {
       return {
         ...state,
-        validate: { checklist: action.list },
+        transaction: action.payload,
       };
     }
-    case GET_BRAND_LIST: {
+    case GET_BRAND_ORDERS: {
       return {
         ...state,
         list: action.list,
+      };
+    }
+    case GET_BRAND: {
+      return {
+        ...state,
+        current: action.list[0],
       };
     }
     // Do something here based on the different types of actions

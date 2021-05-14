@@ -23,7 +23,7 @@
     "@testing-library/user-event": "^12.1.10",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
-    "umanyuikit": "^1.4.5",
+    "umanyuikit": "^1.6.9",
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.21.1",
     "axios-mock-adapter": "^1.19.0",

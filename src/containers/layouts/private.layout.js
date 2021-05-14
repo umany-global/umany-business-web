@@ -35,6 +35,9 @@ import Link from "@material-ui/core/Link";
 // ACTIONS
 import { AUTH_LOGOUT } from "@utilities/redux/actions/constants";
 
+// ACTIONS CREATORS
+import { getBrand } from "@utilities/redux/actions/brand.creators";
+
 // ICONS
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -122,9 +125,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard = ({ children, dispatch }) => {
+const Dashboard = ({ children, dispatch, initBrand }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    initBrand();
+  }, []);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -239,4 +247,12 @@ const mapStateToProps = (state) => {
   return state.auth;
 };
 
-export default connect(mapStateToProps)(Dashboard);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    initBrand: (data) => {
+      dispatch(getBrand(data));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

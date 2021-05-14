@@ -23,10 +23,7 @@ import LoginStyle from "@utilities/styles/views/login.style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // ACTIONS
-import {
-  AUTH_LOGOUT,
-  HANDLE_AUTH,
-} from "@utilities/redux/actions/constants";
+import { AUTH_LOGOUT, HANDLE_AUTH } from "@utilities/redux/actions/constants";
 
 // IMAGES
 import logo from "@utilities/images/logo-umany.png";
@@ -39,7 +36,7 @@ import { handleErrors } from "@utilities/custom";
 // ACTIONS CREATORS
 import {
   loginWithPhone,
-  loginWithGoogle,
+  loginWithProvider,
 } from "@utilities/redux/actions/auth.creators";
 
 // COMPONENTS
@@ -69,7 +66,7 @@ class LoginView extends React.Component {
   async handleFirebase() {
     await firebase.messaging().requestPermission();
     const fcmToken = await firebase.messaging().getToken();
-    console.log('fcmToken', fcmToken)
+    console.log("fcmToken", fcmToken);
     this.props.auth_token({
       fcmToken,
     });
@@ -185,39 +182,22 @@ class LoginView extends React.Component {
     });
   }
 
-  async handleAuth(isUmanySignIn) {
+  async handleAuth() {
     const { phone, password } = Object.assign({}, this.state);
     try {
       const { fcmToken } = this.props;
       await this.props.logout({ authToken: "" });
-
-      let response;
-      if (isUmanySignIn) {
-        console.log("PHONE");
-        await this.props.handlePhoneLogin({ phone, password, fcmToken });
-      } else {
-        await this.props.handleGoogleLogin({ fcmToken });
-      }
-
-      // await this.getMe(fcmToken);
+      await this.props.handlePhoneLogin({ phone, password, fcmToken });
     } catch (error) {
-      if (error.code) {
-        const msg = this.props.t(error.code);
-        this.setState({
-          valid: {
-            open: true,
-            msg,
-          },
-        });
-      } else {
-        const { msg } = handleErrors(error);
-        this.setState({
-          valid: {
-            open: true,
-            msg,
-          },
-        });
-      }
+      // console.log("error :>> ", error, error.response);
+    }
+  }
+  async handleAuthProvider(provider) {
+    try {
+      const { fcmToken } = this.props;
+      await this.props.logout({ authToken: "" });
+      await this.props.handleProviderLogin({ fcmToken, provider });
+    } catch (error) {
       // console.log("error :>> ", error, error.response);
     }
   }
@@ -365,7 +345,7 @@ class LoginView extends React.Component {
                     variant="contained"
                     // color="white"
                     onClick={() => {
-                      this.handleAuth();
+                      this.handleAuthProvider("GoogleAuthProvider");
                     }}
                     className={classes.submit}
                     startIcon={<FontAwesomeIcon icon={["fab", "google"]} />}
@@ -378,7 +358,7 @@ class LoginView extends React.Component {
                     variant="contained"
                     // color="white"
                     onClick={() => {
-                      this.handleAuth();
+                      this.handleAuthProvider("FacebookAuthProvider");
                     }}
                     className={classes.submit}
                     startIcon={<FontAwesomeIcon icon={["fab", "facebook-f"]} />}
@@ -420,8 +400,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleGoogleLogin: (data) => {
-      dispatch(loginWithGoogle(data));
+    handleProviderLogin: (data) => {
+      dispatch(loginWithProvider(data));
     },
     handlePhoneLogin: (data) => {
       dispatch(loginWithPhone(data));

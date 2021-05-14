@@ -1,3 +1,4 @@
+import React from "react";
 import "./App.css";
 import "fontsource-roboto";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -11,16 +12,20 @@ import { connect } from "react-redux";
 // ACTIONS
 import { HANDLE_MESSAGE } from "@utilities/redux/actions/constants";
 
+// ACTIONS CREATORS
+// import { getBrand } from "@utilities/redux/actions/brand.creators";
+
 // ROUTERS
 import PublicComponent from "@/router/public";
 import PrivateComponent from "@/router/private";
 
 library.add(fab);
 
-const App = ({ auth, message, handleClose }) => {
+const App = (props) => {
+  const { auth, message, handleClose } = props;
+  console.log('message', message)
   const { loggedIn } = auth;
   const { text, open = true, time = 6000, type = "success" } = message;
-
   return (
     <div className="App">
       <Snackbar
@@ -45,7 +50,7 @@ const App = ({ auth, message, handleClose }) => {
 };
 
 const mapStateToProps = (state) => {
-  return { auth: state.auth, message: state.message };
+  return { auth: state.auth, message: state.message, brands: state.brands };
 };
 
 const mapDispatchToProps = (dispatch) => {

@@ -89,7 +89,65 @@ export const getBrandList = (data) => {
 };
 
 /**
- * Get Bramds filtering by Search
+ * Get Current Brand Orders
+ * @param {string} brandId // Current brandId of the user
+ */
+export const getTransactionList = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await API({
+        method: "GET",
+        url: `/transactions/`,
+      });
+      return resolve(response);
+    } catch (error) {
+      console.log("error :>> ", error);
+      return reject(error);
+    }
+  });
+};
+
+/**
+ * Create New Redeem
+ * @param {Object(brandId, transactionId)} data // Dictionary of redeem discount
+ */
+export const newRedeem = ({ brandId, transactionId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await API({
+        method: "POST",
+        url: `/brands/${brandId}/redeem/${transactionId}/`,
+      });
+      return resolve(response);
+    } catch (error) {
+      console.log("error :>> ", error);
+      return reject(error);
+    }
+  });
+};
+
+/**
+ * Get Current Brand Transaction
+ * @param {string} transactionId // Current brandId of the user
+ */
+export const getBrandTransaction = (transactionId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await API({
+        method: "GET",
+        url: `/transactions/${transactionId}/`,
+      });
+      console.log("response getBrandTransaction", response);
+      return resolve(response);
+    } catch (error) {
+      console.log("error :>> ", error);
+      return reject(error);
+    }
+  });
+};
+
+/**
+ * Get Current Brand
  * @param {Object({search})} params
  */
 export const getBrands = (params) => {
@@ -109,10 +167,13 @@ export const getBrands = (params) => {
 };
 
 const client = {
-  taxes,
-  editBrand,
   getValidationChecklist,
+  getBrandTransaction,
+  getTransactionList,
   getBrandList,
+  newRedeem,
+  editBrand,
   getBrands,
+  taxes,
 };
 export default client;

@@ -4,41 +4,39 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 // ACTIONS CREATORS
-import {
-  filterBrand,
-  filterReports,
-  filterCategory,
-  filterProject,
-} from "@utilities/redux/actions/dashboard.creators";
+import { getTransactionList } from "@utilities/redux/actions/brand.creators";
 
 // COMPONENTS
-import { Components } from "umanyuikit";
+import { Components } from "argonflavor";
 // import UmanyList from "@components/list.component";
 
 // Constant
 
 // eslint-disable-next-line import/no-anonymous-default-export
-const HomeView = (props) => {
-  // const {} = props;
+const BrandListView = (props) => {
+  const { brand, initBrandList } = props;
   const history = useHistory();
   const classes = useStyles();
-  const [list, setList] = React.useState([
-    { amount: 10, product: "Chupeta", discount: "10%" },
-    { amount: 7, product: "Canela", discount: "14%" },
-    { amount: 600, product: "Maya", discount: "15%" },
-  ]);
+  React.useEffect(() => {
+    if (brand.current.id) {
+      console.log('brand.current', brand.current)
+      initBrandList(brand.current.brand.id);
+    }
+  }, [brand.current.id]);
 
   const { UmanyList } = Components;
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} className={classes.tabContent}>
         <UmanyList
-          items={list}
-          onInput={() => {
-            history.push("/product");
-          }}
+          items={brand.list}
+          // onInput={(item) => {
+          //   console.log('item', item)
+          //   history.push(`/${item.id}`);
+          // }}
         />
       </Grid>
     </Grid>
@@ -73,22 +71,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const mapStateToProps = (state) => state.dashboard;
+const mapStateToProps = (state) => {
+  return { brand: state.brands };
+};
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleBrand: (params) => {
-      dispatch(filterBrand(params));
-    },
-    handleReport: (params) => {
-      dispatch(filterReports(params));
-    },
-    handleCategory: (params) => {
-      dispatch(filterCategory(params));
-    },
-    handleProject: (params) => {
-      dispatch(filterProject(params));
+    initBrandList: (brandId) => {
+      dispatch(getTransactionList(brandId));
     },
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
+BrandListView.propTypes = {
+  brand: PropTypes.object,
+  selectCurrentDiscount: PropTypes.func,
+  initBrandList: PropTypes.func,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BrandListView);

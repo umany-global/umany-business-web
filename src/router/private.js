@@ -22,7 +22,7 @@ export default () => {
       <PrivateLayout>
         <Switch>
           <Route path="/" exact component={ProductList} />
-          <Route path="/:id" exact component={ProductBox} />
+          <Route path="/:transactionId" exact component={ProductBox} />
           <Redirect to="/" />
         </Switch>
       </PrivateLayout>

@@ -35,9 +35,9 @@ export const loginWithPhone = (data) => {
   };
 };
 
-export const loginWithGoogle = (data) => {
+export const loginWithProvider = (data) => {
   return async (dispatch) => {
-    const provider = new firebase.auth.GoogleAuthProvider();
+    const provider = new firebase.auth[data.provider]();
     try {
       const response = await firebase.auth().signInWithPopup(provider);
       let result = await firebase
@@ -46,7 +46,7 @@ export const loginWithGoogle = (data) => {
       const phone_token = await result.user.getIdToken(true);
       const authToken = await firebase.auth().currentUser.getIdToken();
       const fcmToken = await firebase.messaging().getToken();
-      console.log('fcmToken', fcmToken)
+      console.log("fcmToken", fcmToken);
       await AuthClient.validClientToken({
         phone_token,
         authToken,

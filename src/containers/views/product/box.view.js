@@ -2,51 +2,70 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 // ACTIONS CREATORS
-import {
-  filterBrand,
-  filterReports,
-  filterCategory,
-  filterProject,
-} from "@utilities/redux/actions/dashboard.creators";
+import { getBrandTransaction } from "@utilities/redux/actions/brand.creators";
 
 // COMPONENTS
-import { Components } from "umanyuikit";
+import { Components } from "argonflavor";
 // import UmanyList from "@components/list.component";
 
-// Constant
+// CLIENTS
+import BrandClient from "@api/clients/brands";
+
+// CONSTANTS
+import { HANDLE_MESSAGE } from "@/utilities/redux/actions/constants";
 
 // eslint-disable-next-line import/no-anonymous-default-export
-const HomeView = (props) => {
-  // const {} = props;
+const DiscountBox = ({ brand, handleTransaction, handleMessage }) => {
   const history = useHistory();
   const classes = useStyles();
-  const [target, setTarget] = React.useState({
-    amount: 600,
-    product: "Maya",
-    discount: "15%",
-  });
+  let { transactionId } = useParams();
+  React.useEffect(() => {
+    if (transactionId) {
+      handleTransaction(transactionId);
+    } else {
+      history.push("/");
+    }
+  }, []);
 
   const handleCancel = () => {
     history.push("/");
   };
-
+  const transaction = Object.assign(brand.transaction, {});
   const { PromoBox } = Components;
   return (
     <Grid container className={classes.root}>
       <Grid container justify="center">
         <Grid item md={4}>
-          <PromoBox
-            item={target}
-            confirmation={(item) => {
-              if (!item) {
-                handleCancel();
-              }
-            }}
-          />
+          {transaction.id && brand.current.id ? (
+            <PromoBox
+              item={transaction}
+              brand={brand.current.brand}
+              confirmation={(item) => {
+                if (!item) {
+                  handleCancel();
+                } else {
+                  BrandClient.newRedeem({
+                    brandId: brand.current.brand.id,
+                    transactionId: transaction.id,
+                  })
+                    .then((response) => {
+                      handleMessage(
+                        `El descuento se ha aplicado correctamente`
+                      );
+                      history.push("/");
+                    })
+                    .catch(() => {
+                      history.push("/");
+                    });
+                }
+              }}
+            />
+          ) : null}
         </Grid>
       </Grid>
     </Grid>
@@ -81,22 +100,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const mapStateToProps = (state) => state.dashboard;
+const mapStateToProps = (state) => {
+  return { brand: state.brands };
+};
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleBrand: (params) => {
-      dispatch(filterBrand(params));
+    handleTransaction: (transactionId) => {
+      dispatch(getBrandTransaction(transactionId));
     },
-    handleReport: (params) => {
-      dispatch(filterReports(params));
-    },
-    handleCategory: (params) => {
-      dispatch(filterCategory(params));
-    },
-    handleProject: (params) => {
-      dispatch(filterProject(params));
+    handleMessage: (text) => {
+      dispatch({
+        type: HANDLE_MESSAGE,
+        payload: {
+          text,
+          open: true,
+          type: "success",
+        },
+      });
     },
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
+DiscountBox.propTypes = {
+  brand: PropTypes.object,
+  handleTransaction: PropTypes.func,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DiscountBox);

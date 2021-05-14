@@ -5,8 +5,12 @@ export const AUTH_LOGOUT = "set_logout";
 export const HANDLE_MESSAGE = "set_message";
 
 // BRANDS
-export const VALIDATE_CHECK_LIST = "brand_validation_result_checklist";
+export const HANDLE_CURRENT_DISCOUNT = "current_discount";
 export const GET_BRAND_LIST = "brand_list";
+export const GET_BRAND = "get_brand";
+export const NEW_REDEEM = "new_redeem";
+export const GET_BRAND_ORDERS = "get_brand_orders";
+export const GET_BRAND_TRANSACTION = "get_brand_transaction";
 
 // FILTERS HOME
 export const FILTER_BRAND = "home_brand_filter";
