@@ -9,14 +9,22 @@ import {
   HANDLE_GOOGLE_LOGIN,
 } from "@/utilities/redux/actions/constants";
 
+const { REACT_APP_vapidKey } = process.env;
+
+// import { messaging } from "@components/firebase";
 export const loginWithPhone = (data) => {
   return async (dispatch) => {
     try {
       let response = await AuthClient.loginPhone(data);
-      response = await firebase.auth().signInWithCustomToken(response.data);
+      const { id_token } = response.data;
+      response = await firebase
+        .auth()
+        .signInWithCustomToken(id_token);
       const phone_token = await response.user.getIdToken(true);
       const authToken = await firebase.auth().currentUser.getIdToken();
-      const fcmToken = await firebase.messaging().getToken();
+      const fcmToken = await firebase
+        .messaging()
+        .getToken({ vapidKey: REACT_APP_vapidKey });
       await AuthClient.validClientToken({
         phone_token,
         authToken,
@@ -45,7 +53,9 @@ export const loginWithProvider = (data) => {
         .signInWithCredential(response.credential);
       const phone_token = await result.user.getIdToken(true);
       const authToken = await firebase.auth().currentUser.getIdToken();
-      const fcmToken = await firebase.messaging().getToken();
+      const fcmToken = await firebase
+        .messaging()
+        .getToken({ vapidKey: REACT_APP_vapidKey });
       console.log("fcmToken", fcmToken);
       await AuthClient.validClientToken({
         phone_token,
@@ -53,7 +63,6 @@ export const loginWithProvider = (data) => {
         fcmToken,
         // phone_number: data.phone,
       });
-      console.log("result", result);
       dispatch({
         type: HANDLE_GOOGLE_LOGIN,
         // payload: result.data,

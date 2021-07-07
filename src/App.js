@@ -23,7 +23,6 @@ library.add(fab);
 
 const App = (props) => {
   const { auth, message, handleClose } = props;
-  console.log('message', message)
   const { loggedIn } = auth;
   const { text, open = true, time = 6000, type = "success" } = message;
   return (

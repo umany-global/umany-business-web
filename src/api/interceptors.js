@@ -1,5 +1,6 @@
 // STORE
 import store from "@utilities/redux";
+import Cookies from "js-cookie";
 
 import { AUTH_LOGOUT, HANDLE_ERROR } from "@/utilities/redux/actions/constants";
 
@@ -9,10 +10,9 @@ const { REACT_APP_FCM_LABEL, REACT_APP_AUTH_LABEL } = process.env;
 export default (instance) => {
   instance.interceptors.request.use(
     (config) => {
-      const authToken = sessionStorage.getItem(REACT_APP_AUTH_LABEL);
-      const fcmToken = sessionStorage.getItem(REACT_APP_FCM_LABEL);
+      const authToken = Cookies.get(REACT_APP_AUTH_LABEL);
+      const fcmToken = Cookies.get(REACT_APP_FCM_LABEL);
       config.headers["Umany-ai"] = fcmToken;
-      console.log("config.headers", config.headers);
       if (authToken) {
         config.headers["Authorization"] = authToken;
       }

@@ -6,8 +6,10 @@ import {
   HANDLE_PHONE_LOGIN,
   HANDLE_GOOGLE_LOGIN,
 } from "@/utilities/redux/actions/constants";
+import Cookies from "js-cookie";
 
-const { REACT_APP_FCM_LABEL, REACT_APP_AUTH_LABEL } = process.env;
+const { REACT_APP_FCM_LABEL, REACT_APP_AUTH_LABEL, REACT_APP_COOKIE_EXP } =
+  process.env;
 
 // Use the initialState as a default value
 export default function appReducer(state = AuthState, action) {
@@ -16,7 +18,7 @@ export default function appReducer(state = AuthState, action) {
     case AUTH_LOGIN: {
       const { authToken } = action.payload;
       const loggedIn = Boolean(authToken);
-      console.log('loggedIn', loggedIn)
+      console.log("loggedIn", loggedIn);
       return {
         ...state,
         authToken,
@@ -25,7 +27,10 @@ export default function appReducer(state = AuthState, action) {
     }
     case HANDLE_PHONE_LOGIN: {
       const { authToken } = action;
-      if (authToken) sessionStorage.setItem(REACT_APP_AUTH_LABEL, authToken);
+      if (authToken)
+        Cookies.set(REACT_APP_AUTH_LABEL, authToken, {
+          expires: parseInt(REACT_APP_COOKIE_EXP),
+        });
       return {
         ...state,
         authToken,
@@ -34,7 +39,10 @@ export default function appReducer(state = AuthState, action) {
     }
     case HANDLE_GOOGLE_LOGIN: {
       const { authToken } = action;
-      if (authToken) sessionStorage.setItem(REACT_APP_AUTH_LABEL, authToken);
+      if (authToken)
+        Cookies.set(REACT_APP_AUTH_LABEL, authToken, {
+          expires: parseInt(REACT_APP_COOKIE_EXP),
+        });
       return {
         ...state,
         authToken,
@@ -42,8 +50,8 @@ export default function appReducer(state = AuthState, action) {
       };
     }
     case AUTH_LOGOUT: {
-      // sessionStorage.removeItem(REACT_APP_FCM_LABEL);
-      sessionStorage.removeItem(REACT_APP_AUTH_LABEL);
+      // Cookies.remove(REACT_APP_FCM_LABEL);
+      Cookies.remove(REACT_APP_AUTH_LABEL);
       return {
         ...state,
         authToken: "",
@@ -52,8 +60,14 @@ export default function appReducer(state = AuthState, action) {
     }
     case HANDLE_AUTH: {
       const { fcmToken, authToken } = action.payload;
-      if (fcmToken) sessionStorage.setItem(REACT_APP_FCM_LABEL, fcmToken);
-      if (authToken) sessionStorage.setItem(REACT_APP_AUTH_LABEL, authToken);
+      if (fcmToken)
+        Cookies.set(REACT_APP_FCM_LABEL, fcmToken, {
+          expires: parseInt(REACT_APP_COOKIE_EXP),
+        });
+      if (authToken)
+        Cookies.set(REACT_APP_AUTH_LABEL, authToken, {
+          expires: parseInt(REACT_APP_COOKIE_EXP),
+        });
       return {
         ...state,
         ...action.payload,

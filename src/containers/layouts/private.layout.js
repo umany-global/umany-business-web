@@ -10,18 +10,16 @@ import clsx from "clsx";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import { connect } from "react-redux";
 import firebase from "firebase/app";
+import "firebase/messaging";
 import "firebase/auth";
 
 // COMPONENTS
-import MenuList from "@/router/menu";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
-import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
-import List from "@material-ui/core/List";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -29,25 +27,44 @@ import IconButton from "@material-ui/core/IconButton";
 // import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Link from "@material-ui/core/Link";
 
 // ACTIONS
 import { AUTH_LOGOUT } from "@utilities/redux/actions/constants";
 
 // ACTIONS CREATORS
-import { getBrand } from "@utilities/redux/actions/brand.creators";
+import {
+  getBrand,
+  getBrandOrders,
+} from "@utilities/redux/actions/brand.creators";
+import { handleMessage } from "@utilities/redux/actions/message.creators";
 
 // ICONS
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import RefreshIcon from "@material-ui/icons/Refresh";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 // IMAGES
 import logo from "@utilities/images/logo-umany.png";
 
+// CONSTANTS
 const drawerWidth = 240;
+
+// PRIVATE FUNCTIONS
+const handleFMessage = async ({ id }, creators) => {
+  const messaging = firebase.messaging();
+  await messaging.requestPermission();
+  if (firebase.messaging.isSupported()) {
+    console.log("Push Notifications initiate");
+    messaging.onMessage((msg) => {
+      creators(id);
+      handleMessage({
+        text: msg.notification.title,
+        open: true,
+        type: "success",
+      });
+    });
+  }
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,9 +94,6 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-  },
-  menuButton: {
-    marginRight: 36,
   },
   menuButtonHidden: {
     display: "none",
@@ -125,12 +139,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard = ({ children, dispatch, initBrand }) => {
+const Dashboard = ({
+  children,
+  dispatch,
+  initBrand,
+  initBrandList,
+  logout,
+  brands,
+}) => {
+  const { current } = brands;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
     initBrand();
+    handleFMessage(current, initBrandList);
   }, []);
 
   const handleDrawerOpen = () => {
@@ -149,7 +172,7 @@ const Dashboard = ({ children, dispatch, initBrand }) => {
           label: "Yes",
           onClick: async () => {
             await firebase.auth().signOut();
-            dispatch({ type: AUTH_LOGOUT, payload: {} });
+            logout();
           },
         },
         {
@@ -158,8 +181,6 @@ const Dashboard = ({ children, dispatch, initBrand }) => {
       ],
     });
   };
-
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
     <div className={classes.root}>
@@ -244,11 +265,17 @@ const Dashboard = ({ children, dispatch, initBrand }) => {
 };
 
 const mapStateToProps = (state) => {
-  return state.auth;
+  return state;
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    logout: () => {
+      dispatch({ type: AUTH_LOGOUT, payload: {} });
+    },
+    initBrandList: (brandId) => {
+      dispatch(getBrandOrders(brandId));
+    },
     initBrand: (data) => {
       dispatch(getBrand(data));
     },

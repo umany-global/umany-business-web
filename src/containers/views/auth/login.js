@@ -11,13 +11,18 @@ import "firebase/messaging";
 // LIB COMPONENTS
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
+import { IconButton } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Snackbar from "@material-ui/core/Snackbar";
+import Divider from "@material-ui/core/Divider";
+import TextField from "@material-ui/core/TextField";
 
 // STYLES
 import LoginStyle from "@utilities/styles/views/login.style";
+// LAYOUTS
+import LoginLayout from "@containers/layouts/login.layout";
 
 // ICONS
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -66,7 +71,6 @@ class LoginView extends React.Component {
   async handleFirebase() {
     await firebase.messaging().requestPermission();
     const fcmToken = await firebase.messaging().getToken();
-    console.log("fcmToken", fcmToken);
     this.props.auth_token({
       fcmToken,
     });
@@ -156,9 +160,9 @@ class LoginView extends React.Component {
   }
 
   async getMe(fcmToken) {
-    API.defaults.headers.common[
-      "Authorization"
-    ] = await firebase.auth().currentUser.getIdToken();
+    API.defaults.headers.common["Authorization"] = await firebase
+      .auth()
+      .currentUser.getIdToken();
 
     var config = {
       method: "get",
@@ -223,30 +227,13 @@ class LoginView extends React.Component {
 
     const { classes, t } = this.props;
     return (
-      <Grid container component="main" className={classes.root}>
-        <CssBaseline />
-        <MsgSnack open={this.state.valid.open} />
-        {this.state.position ? (
+      <LoginLayout>
+        <Grid container component="main" className={classes.root}>
+          <CssBaseline />
+          <MsgSnack open={this.state.valid.open} />
           <Grid container direction="row" justify="center" alignItems="center">
-            <Grid item md={4} elevation={2}>
+            <Grid item elevation={2}>
               <div className={classes.paper}>
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  style={{
-                    flexDirection: "row",
-                    flexWrap: "initial",
-                  }}
-                >
-                  <img src={logo} alt="" style={{ width: 70 }} />
-                  <Typography component="h2" align="left" variant="body1">
-                    Ingresa con tu telefono y contraseña
-                    {/* {t("login.sign_in")} */}
-                  </Typography>
-                </Grid>
-
                 <form className={classes.form} noValidate>
                   <Grid
                     container
@@ -257,7 +244,6 @@ class LoginView extends React.Component {
                       flexWrap: "initial",
                     }}
                   >
-                    <InputLabel>Teléfono: +54 (11) 0000-0000</InputLabel>
                     <Grid
                       container
                       justify="center"
@@ -267,17 +253,11 @@ class LoginView extends React.Component {
                         flexWrap: "initial",
                       }}
                     >
-                      <InputUmany
-                        placeholder="+54"
-                        disabled
-                        style={{ width: 90 }}
-                      />
-                      <InputUmany
+                      <TextField
                         value={this.state.phone}
                         name="phone"
                         onChange={this.handleChange}
-                        style={{ width: "100%" }}
-                        placeholder="(11) 1234-5678"
+                        label="Telefono"
                       />
                     </Grid>
                   </Grid>
@@ -291,105 +271,76 @@ class LoginView extends React.Component {
                       flexWrap: "initial",
                     }}
                   >
-                    <InputLabel>Contraseña</InputLabel>
-                    <InputUmany
+                    <TextField
                       value={this.state.password}
                       name="password"
                       type="password"
                       onChange={this.handleChange}
-                      style={{ width: "100%" }}
-                      placeholder="Contraseña"
+                      label="Contraseña"
                     />
                   </Grid>
                 </form>
 
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                >
+                <Grid container direction="column" alignItems="flex-end">
+                  <Typography color="primary" variant="body2">
+                    Olvidaste tu contraseña
+                  </Typography>
                   <Button
                     onClick={() => {
                       this.handleAuth(true);
                     }}
                     variant="contained"
-                    color="secondary"
+                    color="primary"
                   >
-                    Entrár
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      this.handleViewPosition();
-                    }}
-                    variant="contained"
-                  >
-                    Volver
+                    Ingresa
                   </Button>
                 </Grid>
-              </div>
-            </Grid>
-          </Grid>
-        ) : (
-          <Grid container direction="row" justify="center" alignItems="center">
-            <Grid item md={4} elevation={2}>
-              <div className={classes.paper}>
-                <img src={logo} alt="" style={{ width: 100 }} />
-                <Typography component="h1" variant="h5">
-                  Bienvenido a Umany
-                  {/* {t("login.sign_in")} */}
-                </Typography>
                 <form className={classes.form} noValidate>
+                  <Divider style={{ margin: "10px 0" }} />
+
                   <Button
-                    fullWidth
                     variant="contained"
-                    // color="white"
+                    style={{ background: "red", color: "white" }}
+                    className={classes.submit}
+                    startIcon={<FontAwesomeIcon icon={["fab", "google"]} />}
                     onClick={() => {
                       this.handleAuthProvider("GoogleAuthProvider");
                     }}
-                    className={classes.submit}
-                    startIcon={<FontAwesomeIcon icon={["fab", "google"]} />}
                   >
-                    Entrá con Google
+                    Google
                   </Button>
-
                   <Button
-                    fullWidth
                     variant="contained"
-                    // color="white"
+                    color="primary"
+                    className={classes.submit}
+                    endIcon={<FontAwesomeIcon icon={["fab", "facebook-f"]} />}
                     onClick={() => {
                       this.handleAuthProvider("FacebookAuthProvider");
                     }}
-                    className={classes.submit}
-                    startIcon={<FontAwesomeIcon icon={["fab", "facebook-f"]} />}
                   >
-                    Entrá con Facebook
+                    Facebook
                   </Button>
+                  <Divider style={{ margin: "10px 0" }} />
                 </form>
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Button
-                    onClick={() => {
-                      this.handleViewPosition("byphone");
-                    }}
-                    variant="contained"
-                    color="secondary"
+                <Grid container direction="column" alignItems="center">
+                  <Typography
+                    style={{ fontWeigth: "bold" }}
+                    variant="h6"
+                    gutterBottom
+                    color="primary"
                   >
-                    Entrár
-                  </Button>
-                  <Button variant="contained" color="secondary">
-                    Crea Cuenta
-                  </Button>
+                    Todavia no registraste tu negocio, emprendimiento?
+                  </Typography>
+                  <p style={{ margin: "10px 0 5px 0" }}>
+                    Descarga la app y suma tu huella
+                  </p>
+                  <img src={"images/googlePlay.png"} alt="gplay" width="125" />
                 </Grid>
               </div>
             </Grid>
           </Grid>
-        )}
-      </Grid>
+        </Grid>
+      </LoginLayout>
     );
   }
 }
@@ -428,6 +379,6 @@ export default compose(
     connect(
       mapStateToProps,
       mapDispatchToProps
-    )(withStyles(LoginStyle, { withTheme: true })(LoginView))
+    )(withStyles(LoginStyle.main, { withTheme: true })(LoginView))
   )
 );

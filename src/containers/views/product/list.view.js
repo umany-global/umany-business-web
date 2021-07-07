@@ -7,10 +7,10 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 // ACTIONS CREATORS
-import { getTransactionList } from "@utilities/redux/actions/brand.creators";
+import { getBrandOrders } from "@utilities/redux/actions/brand.creators";
 
 // COMPONENTS
-import { Components } from "argonflavor";
+import { Components } from "umanyuikit";
 // import UmanyList from "@components/list.component";
 
 // Constant
@@ -22,7 +22,7 @@ const BrandListView = (props) => {
   const classes = useStyles();
   React.useEffect(() => {
     if (brand.current.id) {
-      console.log('brand.current', brand.current)
+      
       initBrandList(brand.current.brand.id);
     }
   }, [brand.current.id]);
@@ -77,7 +77,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     initBrandList: (brandId) => {
-      dispatch(getTransactionList(brandId));
+      dispatch(getBrandOrders(brandId));
     },
   };
 };

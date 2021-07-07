@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import { getBrandTransaction } from "@utilities/redux/actions/brand.creators";
 
 // COMPONENTS
-import { Components } from "argonflavor";
+import { Components } from "umanyuikit";
 // import UmanyList from "@components/list.component";
 
 // CLIENTS

@@ -39,10 +39,10 @@ export const brandList = (params) => {
   };
 };
 
-export const getTransactionList = (brandId) => {
+export const getBrandOrders = (brandId) => {
   return async (dispatch) => {
     try {
-      const response = await BrandClient.getTransactionList(brandId);
+      const response = await BrandClient.getBrandOrders(brandId);
       dispatch({
         type: GET_BRAND_ORDERS,
         list: response.data.data,

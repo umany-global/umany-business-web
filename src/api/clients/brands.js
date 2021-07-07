@@ -92,6 +92,21 @@ export const getBrandList = (data) => {
  * Get Current Brand Orders
  * @param {string} brandId // Current brandId of the user
  */
+export const getBrandOrders = (brandId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await API({
+        method: "GET",
+        url: `/brands/${brandId}/orders/`,
+      });
+      return resolve(response);
+    } catch (error) {
+      console.log("error :>> ", error);
+      return reject(error);
+    }
+  });
+};
+
 export const getTransactionList = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -137,7 +152,6 @@ export const getBrandTransaction = (transactionId) => {
         method: "GET",
         url: `/transactions/${transactionId}/`,
       });
-      console.log("response getBrandTransaction", response);
       return resolve(response);
     } catch (error) {
       console.log("error :>> ", error);
@@ -170,6 +184,7 @@ const client = {
   getValidationChecklist,
   getBrandTransaction,
   getTransactionList,
+  getBrandOrders,
   getBrandList,
   newRedeem,
   editBrand,
